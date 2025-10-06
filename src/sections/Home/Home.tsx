@@ -30,7 +30,7 @@ export const Home = () => {
       className='bg-gradient-to-r from-teal-100/70 to-orange-100/70'
     >
       <div className='py-32 px-12'>
-        <div className='relative z-10 max-w-7xl mx-auto'>
+        <div className='relative z-10 max-w-5xl mx-auto'>
           <div className='max-w-2xl mx-auto mb-16 bg-gradient-to-r from-teal-200/80 to-orange-200/80 rounded-full p-6 text-center'>
             <h1 className='text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-teal-500 to-orange-500'>
               ✨ Feriados en Argentina 2025 ✨
