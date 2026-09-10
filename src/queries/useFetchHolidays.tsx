@@ -3,10 +3,13 @@ import { getHolidays } from '../services/getHolidays'
 import type { Holiday } from '../types/holiday'
 
 export const useFetchHolidays = () => {
-  const { data, isLoading, error } = useQuery<Holiday[], Error>({
+  const { data, isLoading, error, refetch, isFetching } = useQuery<
+    Holiday[],
+    Error
+  >({
     queryKey: ['holidays'],
     queryFn: getHolidays,
   })
 
-  return { data, isLoading, error }
+  return { data, isLoading, error, refetch, isFetching }
 }

@@ -1,20 +1,100 @@
+import { formatLongDate, MONTHS_SHORT, parseHolidayDate } from '../../lib/dates'
+import { holidayIcon, typeLabel } from '../../lib/holidayMeta'
 import type { Holiday } from '../../types/holiday'
 
-interface HolidayCardType {
+interface HolidayCardProps {
+  id: string
   holiday: Holiday
+  daysUntil: number
+  isNext: boolean
+  isExpanded: boolean
+  onToggle: () => void
 }
 
-export const HolidayCard = ({ holiday }: HolidayCardType) => {
+function statusCopy(daysUntil: number) {
+  if (daysUntil === 0) return 'Hoy'
+  if (daysUntil === 1) return 'Mañana'
+  if (daysUntil > 1) return `En ${daysUntil} días`
+  if (daysUntil === -1) return 'Ayer'
+  return `Hace ${Math.abs(daysUntil)} días`
+}
+
+export const HolidayCard = ({
+  id,
+  holiday,
+  daysUntil,
+  isNext,
+  isExpanded,
+  onToggle,
+}: HolidayCardProps) => {
+  const date = parseHolidayDate(holiday.date)
+  const isPast = daysUntil < 0
+  const isToday = daysUntil === 0
+  const types = holiday.types ?? []
+
   return (
-    <div className='bg-gradient-to-r from-orange-200/80 to-teal-200/80 rounded-2xl shadow-md p-6 hover:shadow-lg hover:scale-105 transition-all duration-300 flex flex-col justify-between h-50'>
-      <div className='flex flex-col items-center justify-center flex-1'>
-        <h2 className='text-center text-lg font-semibold text-orange-400'>
+    <article
+      id={id}
+      className={`holiday-card ${isPast ? 'is-past' : ''} ${isToday ? 'is-today' : ''} ${isNext ? 'is-next' : ''}`}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isExpanded}
+        className="holiday-card-button"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className={`date-stamp ${isPast ? '' : 'date-stamp-live'}`}>
+            <span className="font-display text-2xl leading-none">
+              {date.getDate()}
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+              {MONTHS_SHORT[date.getMonth()]}
+            </span>
+          </div>
+          <span className="text-xl" aria-hidden>
+            {holidayIcon(holiday)}
+          </span>
+        </div>
+
+        <h3
+          className="holiday-title"
+          title={holiday.localName}
+        >
           {holiday.localName}
-        </h2>
-        <p className='text-center text-teal-500 font-semibold mt-2'>
-          {holiday.date}
-        </p>
+        </h3>
+
+        <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+          <span
+            className={`status-badge ${isToday ? 'status-today' : ''} ${isNext ? 'status-next' : ''}`}
+          >
+            {isNext && !isToday ? 'El próximo · ' : ''}
+            {statusCopy(daysUntil)}
+          </span>
+          <span className={`chevron ${isExpanded ? 'is-open' : ''}`} aria-hidden>
+            ⌄
+          </span>
+        </div>
+      </button>
+
+      <div
+        className={`card-details ${isExpanded ? 'is-open' : ''}`}
+        aria-hidden={!isExpanded}
+      >
+        <p className="text-sm text-ink-soft">{formatLongDate(holiday.date)}</p>
+        {holiday.name !== holiday.localName && (
+          <p className="mt-2 text-sm text-ink">{holiday.name}</p>
+        )}
+        {types.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {types.map((type) => (
+              <span key={type} className="type-chip">
+                {typeLabel(type)}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
-    </div>
+    </article>
   )
 }
