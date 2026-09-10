@@ -1,28 +1,30 @@
-import { useFetchHolidays } from '../../queries/useFetchHolidays'
+import { useFetchHolidays } from "../../queries/useFetchHolidays";
 
-import { HolidayCard } from '../../components/HolidayCard/HolidayCard'
+import { HolidayCard } from "../../components/HolidayCard/HolidayCard";
+
+const year = new Date().getFullYear();
 
 export const Home = () => {
-  const { data, isLoading, error } = useFetchHolidays()
+  const { data, isLoading, error } = useFetchHolidays();
 
   if (isLoading)
     return (
       <div className='text-center text-teal-400 animate-pulse'>
         Cargando feriados… 📅
       </div>
-    )
+    );
 
-  if (error) return <div>Error: {error.message}</div>
+  if (error) return <div>Error: {error.message}</div>;
 
-  const today = new Date()
+  const today = new Date();
 
   const nextHoliday = data?.find((holiday) => {
-    return new Date(holiday.date) > today
-  })
+    return new Date(holiday.date) > today;
+  });
 
   const daysUntilNextHoliday = Math.floor(
-    (new Date(nextHoliday?.date || '') - today) / (1000 * 60 * 60 * 24)
-  )
+    (new Date(nextHoliday?.date || "") - today) / (1000 * 60 * 60 * 24),
+  );
 
   return (
     <section
@@ -33,15 +35,15 @@ export const Home = () => {
         <div className='relative z-10 max-w-5xl mx-auto'>
           <div className='max-w-2xl mx-auto mb-16 bg-gradient-to-r from-teal-200/80 to-orange-200/80 rounded-full p-6 text-center'>
             <h1 className='text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-teal-500 to-orange-500'>
-              ✨ Feriados en Argentina 2025 ✨
+              ✨ Feriados en Argentina {year} ✨
             </h1>
           </div>
 
           <h3 className='text-xl text-center text-teal-400 animate-pulse mb-12'>
-            Faltan{' '}
+            Faltan{" "}
             <span className='font-bold text-orange-400'>
               {daysUntilNextHoliday}
-            </span>{' '}
+            </span>{" "}
             dias para el próximo feriado 🗓️
           </h3>
 
@@ -53,5 +55,5 @@ export const Home = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

@@ -1,9 +1,11 @@
-import axios from 'axios'
-import type { Holiday } from '../types/holiday'
+import axios from "axios";
+import type { Holiday } from "../types/holiday";
 
 export const getHolidays = async (): Promise<Holiday[]> => {
+  const year = new Date().getFullYear();
+
   const res = await axios.get<Holiday[]>(
-    'https://date.nager.at/api/v3/publicholidays/2025/AR'
-  )
-  return res.data
-}
+    `https://date.nager.at/api/v3/publicholidays/${year}/AR`,
+  );
+  return res.data;
+};
